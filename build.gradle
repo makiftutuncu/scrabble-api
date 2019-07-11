@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+apply from: 'https://raw.github.com/gretty-gradle-plugin/gretty/master/pluginScripts/gretty.plugin'
+
+group 'com.github.makiftutuncu'
+version '0.1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'org.springframework:spring-webmvc:4.3.24.RELEASE'
+}
+
+gretty {
+    // Start web app on '/'
+    contextPath = '/'
+
+    // Local
+    host = 'localhost'
+    httpPort = 8080
+
+    // App logs go here
+    logDir = 'logs'
+
+    // Jetty log level
+    loggingLevel = 'INFO'
+
+    // Hot reloading and fast deployment
+    fastReload = false
+    scanInterval = 1
+}
