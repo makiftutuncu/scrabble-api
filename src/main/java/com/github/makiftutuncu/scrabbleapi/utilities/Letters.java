@@ -1,4 +1,4 @@
-package com.github.makiftutuncu.scrabbleapi.models;
+package com.github.makiftutuncu.scrabbleapi.utilities;
 
 import java.util.HashMap;
 import java.util.Locale;

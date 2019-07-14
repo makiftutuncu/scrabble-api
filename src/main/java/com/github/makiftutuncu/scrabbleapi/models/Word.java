@@ -1,4 +1,4 @@
-package com.github.makiftutuncu.scrabbleapi.entities;
+package com.github.makiftutuncu.scrabbleapi.models;
 
 import javax.persistence.*;
 import java.util.StringJoiner;

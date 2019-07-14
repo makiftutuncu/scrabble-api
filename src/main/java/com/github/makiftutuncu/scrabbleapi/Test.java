@@ -9,6 +9,6 @@ public class Test {
         board.addWord("çorap", 0, 0, false);
         board.addWord("makas", 0, 5, false);
         board.addWord("kitap", 2, 5, true);
-        board.print();
+        System.out.println(board.print());
     }
 }

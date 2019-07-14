@@ -1,20 +1,85 @@
 package com.github.makiftutuncu.scrabbleapi.models;
 
+import com.github.makiftutuncu.scrabbleapi.utilities.Letters;
+import com.github.makiftutuncu.scrabbleapi.views.CreateBoardRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
+@Entity
+@Table(name = "boards", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 public final class Board {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "size")
+    private int size;
+
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    public Board() {}
+
+    public Board(int id, String name, int size, boolean isActive) {
+        setId(id);
+        setName(name);
+        setSize(size);
+        setActive(isActive);
+        this.board = new Cell[size][size];
+    }
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public static final int SIZE = 15;
+    public static final int DEFAULT_SIZE = 15;
 
-    private Cell[][] board = new Cell[SIZE][SIZE];
+    private Cell[][] board;
 
-    private boolean isActive = true;
     private boolean isEmpty = true;
+
+    public static Board from(CreateBoardRequest request) {
+        return new Board(-1, request.name, request.size, true);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    private void setSize(int size) {
+        this.size = size;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    private void setActive(boolean active) {
+        isActive = active;
+    }
 
     /**
      * Adds given word to the board starting at given location in given direction
@@ -55,8 +120,8 @@ public final class Board {
             return Optional.empty();
         }
 
-        if (wordString.length() > SIZE) {
-            logger.error("Word '{}' is too long, it must not be longer than {} characters!", wordString, SIZE);
+        if (wordString.length() > DEFAULT_SIZE) {
+            logger.error("Word '{}' is too long, it must not be longer than {} characters!", wordString, DEFAULT_SIZE);
             return Optional.empty();
         }
 
@@ -64,13 +129,13 @@ public final class Board {
 
         int length = wordString.length();
 
-        if (row < 0 || row >= SIZE) {
-            logger.error("Row {} is invalid, it must be in [0, {}) range!", row, SIZE);
+        if (row < 0 || row >= DEFAULT_SIZE) {
+            logger.error("Row {} is invalid, it must be in [0, {}) range!", row, DEFAULT_SIZE);
             return Optional.empty();
         }
 
-        if (column < 0 || column >= SIZE) {
-            logger.error("Column {} is invalid, it must be in [0, {}) range!", column, SIZE);
+        if (column < 0 || column >= DEFAULT_SIZE) {
+            logger.error("Column {} is invalid, it must be in [0, {}) range!", column, DEFAULT_SIZE);
             return Optional.empty();
         }
 
@@ -116,31 +181,52 @@ public final class Board {
     }
 
     public void deactivate() {
-        this.isActive = false;
+        setActive(false);
     }
 
-    public void print() {
-        System.out.println();
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+    public String print() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < DEFAULT_SIZE; i++) {
+            for (int j = 0; j < DEFAULT_SIZE; j++) {
                 Cell cell = board[i][j];
 
-                if (j == 1) { System.out.print("|"); }
-                System.out.printf(" %s ", cell == null ? ' ' : cell.letter);
-                if (j > 0 && j < SIZE - 1) { System.out.print("|"); }
+                if (j == 1) { sb.append("|"); }
+                sb.append(String.format(" %s ", cell == null ? ' ' : cell.letter));
+                if (j > 0 && j < DEFAULT_SIZE - 1) { sb.append("|"); }
             }
 
-            if (i < SIZE - 1) {
-                System.out.print("\n");
-                for (int j = 0; j < SIZE; j++) {
-                    if (j == 1) { System.out.print("|"); }
-                    System.out.print("---");
-                    if (j > 0 && j < SIZE - 1) { System.out.print("|"); }
+            if (i < DEFAULT_SIZE - 1) {
+                sb.append("\n");
+                for (int j = 0; j < DEFAULT_SIZE; j++) {
+                    if (j == 1) { sb.append("|"); }
+                    sb.append("---");
+                    if (j > 0 && j < DEFAULT_SIZE - 1) { sb.append("|"); }
                 }
-                System.out.print("\n");
+                sb.append("\n");
             }
         }
-        System.out.println();
+        return sb.toString();
+    }
+
+    public String[][] getLetters() {
+        String[][] letters = new String[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Cell cell = board[i][j];
+                letters[i][j] = cell == null ? "" : String.valueOf(cell.letter);
+            }
+        }
+        return letters;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", "{", "}")
+                .add("\"id\":" + id)
+                .add("\"name\":\"" + name + "\"")
+                .add("\"size\":" + size)
+                .add("\"isActive\":" + isActive)
+                .toString();
     }
 
     public static final class Cell {

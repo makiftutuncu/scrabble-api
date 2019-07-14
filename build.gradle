@@ -20,6 +20,8 @@ dependencies {
     compile 'org.postgresql:postgresql:42.2.6'
     compile 'org.hibernate:hibernate-core:5.4.3.Final'
     compile 'org.flywaydb:flyway-core:5.2.4'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.9'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
 }
 
 gretty {
@@ -38,7 +40,5 @@ gretty {
 
     // Hot reloading and fast deployment
     fastReload = false
-    scanInterval = 1
-
-    servletContainer = 'jetty7'
+    scanInterval = 0
 }
