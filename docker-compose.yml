@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  scrabble:
+    container_name: scrabble
+    image: postgres:alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - scrabble-volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=scrabble-user
+      - POSTGRES_PASSWORD=scrabble-pass
+      - POSTGRES_DB=scrabble
+
+volumes:
+  scrabble-volume:
+    driver: local

@@ -10,6 +10,8 @@
     </encoder>
   </appender>
 
+  <logger name="org.flywaydb.core.internal.sqlscript.SqlScript" level="OFF" additivity="false" />
+
   <logger name="org.springframework" level="DEBUG" additivity="false">
     <appender-ref ref="STDOUT" />
   </logger>
