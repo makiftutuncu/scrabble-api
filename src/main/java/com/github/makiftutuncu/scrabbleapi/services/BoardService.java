@@ -7,10 +7,7 @@ import com.github.makiftutuncu.scrabbleapi.repositories.BoardRepository;
 import com.github.makiftutuncu.scrabbleapi.repositories.WordRepository;
 import com.github.makiftutuncu.scrabbleapi.utilities.HibernateUtils;
 import com.github.makiftutuncu.scrabbleapi.utilities.ScrabbleException;
-import com.github.makiftutuncu.scrabbleapi.views.AddMoveRequest;
-import com.github.makiftutuncu.scrabbleapi.views.BoardResponse;
-import com.github.makiftutuncu.scrabbleapi.views.CreateBoardRequest;
-import com.github.makiftutuncu.scrabbleapi.views.MoveResponse;
+import com.github.makiftutuncu.scrabbleapi.views.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +83,17 @@ public class BoardService {
                 .getBoard(id)
                 .map(board -> board.getMoves().stream().map(MoveResponse::new).collect(Collectors.toList()))
                 .orElseThrow(() -> new ScrabbleException(HttpStatus.NOT_FOUND, String.format("Board %d is not found!", id)));
+    }
+
+    public List<MoveResponse> getMoves(int id, int count) {
+        return getMoves(id).subList(0, count);
+    }
+
+    public List<WordResponse> getWords(int id) {
+        return getMoves(id)
+                .stream()
+                .map(move -> new WordResponse(move.getWord()))
+                .collect(Collectors.toList());
     }
 
     public MoveResponse addMove(int boardId, AddMoveRequest request) {
