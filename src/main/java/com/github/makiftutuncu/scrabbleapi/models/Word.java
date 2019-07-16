@@ -9,17 +9,14 @@ public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Access(AccessType.PROPERTY)
     private int id;
 
     @Column(name = "word")
+    @Access(AccessType.PROPERTY)
     private String word;
 
     public Word() {}
-
-    public Word(int id, String word) {
-        this.id = id;
-        this.word = word;
-    }
 
     public int getId() {
         return id;

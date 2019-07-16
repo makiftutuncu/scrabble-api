@@ -41,4 +41,10 @@ gretty {
     // Hot reloading and fast deployment
     fastReload = false
     scanInterval = 0
+
+    // Default servlet container to use with app* tasks
+    servletContainer = 'tomcat8'
+
+    // Debug port to listen for debug tasks
+    debugPort = 5005
 }

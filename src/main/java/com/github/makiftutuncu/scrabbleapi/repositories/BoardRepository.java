@@ -35,16 +35,11 @@ public class BoardRepository {
                     .setParameter("id", id)
                     .setParameter("isActive", true);
 
-            return query.uniqueResultOptional();
-        });
-    }
+            Optional<Board> maybeBoard = query.uniqueResultOptional();
 
-    public Board createBoard(Board board) {
-        logger.info("Writing new board {} to DB", board);
+            maybeBoard.ifPresent(Board::getMoves);
 
-        return HibernateUtils.withSession(session -> {
-            session.save(board);
-            return board;
+            return maybeBoard;
         });
     }
 }

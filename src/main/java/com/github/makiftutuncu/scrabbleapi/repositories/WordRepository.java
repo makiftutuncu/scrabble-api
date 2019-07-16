@@ -2,6 +2,7 @@ package com.github.makiftutuncu.scrabbleapi.repositories;
 
 import com.github.makiftutuncu.scrabbleapi.models.Word;
 import com.github.makiftutuncu.scrabbleapi.utilities.HibernateUtils;
+import com.github.makiftutuncu.scrabbleapi.utilities.Letters;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class WordRepository {
         return HibernateUtils.withSession(session -> {
             Query<Word> query = session
                     .createQuery("SELECT w FROM Word w WHERE w.word = :word", Word.class)
-                    .setParameter("word", word);
+                    .setParameter("word", Letters.lowerCase(word));
 
             return query.uniqueResultOptional();
         });

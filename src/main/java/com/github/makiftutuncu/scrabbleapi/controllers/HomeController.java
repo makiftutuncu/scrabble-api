@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final HomeService service;
+    private HomeService service;
 
     @Autowired
     public HomeController(HomeService service) {

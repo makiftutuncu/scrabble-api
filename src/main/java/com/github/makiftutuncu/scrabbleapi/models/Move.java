@@ -9,85 +9,85 @@ public class Move {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Access(AccessType.PROPERTY)
     private int id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Access(AccessType.PROPERTY)
     private Board board;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Access(AccessType.PROPERTY)
     private Word word;
 
     @Column(name = "row")
+    @Access(AccessType.PROPERTY)
     private int row;
 
-    @Column(name = "column")
+    @Column(name = "\"column\"")
+    @Access(AccessType.PROPERTY)
     private int column;
 
     @Column(name = "is_horizontal")
+    @Access(AccessType.PROPERTY)
     private boolean isHorizontal;
 
     public Move() {}
 
     public Move(Board board, Word word, int row, int column, boolean isHorizontal) {
-        this.board = board;
-        this.word = word;
-        this.row = row;
-        this.column = column;
-        this.isHorizontal = isHorizontal;
+        setBoard(board);
+        setWord(word);
+        setRow(row);
+        setColumn(column);
+        setIsHorizontal(isHorizontal);
     }
 
     public int getId() {
         return id;
     }
 
-    public Move setId(int id) {
+    public void setId(int id) {
         this.id = id;
-        return this;
     }
 
     public Board getBoard() {
         return board;
     }
 
-    public Move setBoard(Board board) {
+    public void setBoard(Board board) {
         this.board = board;
-        return this;
     }
 
     public Word getWord() {
         return word;
     }
 
-    public Move setWord(Word word) {
+    public void setWord(Word word) {
         this.word = word;
-        return this;
     }
 
     public int getRow() {
         return row;
     }
 
-    public Move setRow(int row) {
+    public void setRow(int row) {
         this.row = row;
-        return this;
     }
 
     public int getColumn() {
         return column;
     }
 
-    public Move setColumn(int column) {
+    public void setColumn(int column) {
         this.column = column;
-        return this;
     }
 
-    public boolean isHorizontal() {
+    public boolean getIsHorizontal() {
         return isHorizontal;
     }
 
-    public Move setHorizontal(boolean horizontal) {
+    public void setIsHorizontal(boolean horizontal) {
         isHorizontal = horizontal;
-        return this;
     }
 
     @Override public String toString() {

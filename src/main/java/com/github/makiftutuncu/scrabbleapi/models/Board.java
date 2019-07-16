@@ -1,60 +1,49 @@
 package com.github.makiftutuncu.scrabbleapi.models;
 
 import com.github.makiftutuncu.scrabbleapi.utilities.Letters;
+import com.github.makiftutuncu.scrabbleapi.utilities.ScrabbleException;
+import com.github.makiftutuncu.scrabbleapi.views.AddMoveRequest;
 import com.github.makiftutuncu.scrabbleapi.views.CreateBoardRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.stream.Stream;
 
 @Entity
 @Table(name = "boards")
-public final class Board {
+public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Access(AccessType.PROPERTY)
     private int id;
 
     @Column(name = "name")
+    @Access(AccessType.PROPERTY)
     private String name;
 
     @Column(name = "size")
+    @Access(AccessType.PROPERTY)
     private int size;
 
     @Column(name = "is_active")
+    @Access(AccessType.PROPERTY)
     private boolean isActive;
 
-    @OneToMany(mappedBy = "board", targetEntity = Move.class, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "board", targetEntity = Move.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Access(AccessType.PROPERTY)
     private List<Move> moves;
 
     public Board() {}
 
-    public Board(int id, String name, int size, boolean isActive) {
-        setId(id);
-        setName(name);
-        setSize(size);
-        setActive(isActive);
-        this.board = new Cell[size][size];
-    }
-
-    @Transient
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Transient
-    public static final int DEFAULT_SIZE = 15;
-
-    @Transient
-    private Cell[][] board;
-
-    @Transient
-    private boolean isEmpty = true;
-
-    public static Board from(CreateBoardRequest request) {
-        return new Board(-1, request.name, request.size, true);
+    public Board(CreateBoardRequest request) {
+        setName(request.getName());
+        setSize(request.getSize());
+        setIsActive(true);
     }
 
     public int getId() {
@@ -78,14 +67,16 @@ public final class Board {
     }
 
     private void setSize(int size) {
+        logger.error("AKIF - setting size");
         this.size = size;
+        this.cells = new Cell[size][size];
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
-    private void setActive(boolean active) {
+    private void setIsActive(boolean active) {
         isActive = active;
     }
 
@@ -93,147 +84,118 @@ public final class Board {
         return moves;
     }
 
-    public Board setMoves(List<Move> moves) {
-        this.moves = moves;
-        return this;
+    public void setMoves(List<Move> moves) {
+        logger.error("AKIF - setting moves");
+        this.moves = new ArrayList<>();
+        for (Move move : moves) {
+            addMove(move);
+        }
     }
 
-    /**
-     * Adds given word to the board starting at given location in given direction
-     *
-     * @param wordString   Word to add
-     * @param row          Starting row to which to add the word
-     * @param column       Starting column to which to add the word
-     * @param isHorizontal Whether word should be added horizontally
-     *
-     * @return Total points earned from adding the word in Optional if the word is added to the board
-     */
-    public Optional<Integer> addWord(String wordString, int row, int column, boolean isHorizontal) {
-        Optional<Word> maybeWord = prepareWordToAdd(wordString, row, column, isHorizontal);
+    @Transient
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-        maybeWord.ifPresent(word -> {
-            for (Cell cell : word.cells) {
-                board[cell.row][cell.column] = cell;
-            }
-            isEmpty = false;
-        });
+    public static final int DEFAULT_SIZE = 15;
 
-        return maybeWord.map(word -> word.point);
+    @Transient
+    private Cell[][] cells;
+
+    public void addMove(Move move) {
+        int row              = move.getRow();
+        int column           = move.getColumn();
+        String word          = move.getWord().getWord();
+        int length           = word.length();
+        boolean isHorizontal = move.getIsHorizontal();
+
+        for (int i = 0; i < length; i++) {
+            int currentRow    = isHorizontal ? row : row + i;
+            int currentColumn = isHorizontal ? column + i : column;
+            Cell cell = new Cell(currentRow, currentColumn, word.charAt(i));
+            cells[currentRow][currentColumn] = cell;
+        }
+
+        moves.add(move);
     }
 
-    /**
-     * Prepares a word to add to the board starting at given location in given direction
-     *
-     * @param wordString   Word to add
-     * @param row          Starting row to which to add the word
-     * @param column       Starting column to which to add the word
-     * @param isHorizontal Whether word should be added horizontally
-     *
-     * @return Prepared word in Optional if the word can be added to the board
-     */
-    private Optional<Word> prepareWordToAdd(String wordString, int row, int column, boolean isHorizontal) {
-        if (wordString == null || wordString.trim().isEmpty()) {
-            logger.error("Word must not be empty!");
-            return Optional.empty();
+    public Move prepareMove(Word word, AddMoveRequest request) {
+        if (!isActive) {
+            throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s', board '%d' is deactivated!", word.getWord(), id));
         }
 
-        if (wordString.length() > DEFAULT_SIZE) {
-            logger.error("Word '{}' is too long, it must not be longer than {} characters!", wordString, DEFAULT_SIZE);
-            return Optional.empty();
-        }
-
-        wordString = wordString.trim();
+        String wordString    = word.getWord();
+        int row              = request.getRow() < 0 || request.getRow() >= size ? -1 : request.getRow();
+        int column           = request.getColumn() < 0 || request.getColumn() >= size ? -1 : request.getColumn();
+        boolean isHorizontal = request.getIsHorizontal();
 
         int length = wordString.length();
 
-        if (row < 0 || row >= DEFAULT_SIZE) {
-            logger.error("Row {} is invalid, it must be in [0, {}) range!", row, DEFAULT_SIZE);
-            return Optional.empty();
+        if (wordString.length() > size || (isHorizontal ? column + length : row + length) > size) {
+            throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s', it is too long!", word.getWord()));
         }
 
-        if (column < 0 || column >= DEFAULT_SIZE) {
-            logger.error("Column {} is invalid, it must be in [0, {}) range!", column, DEFAULT_SIZE);
-            return Optional.empty();
+        if (row == -1) {
+            throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s' to [%d, %d], row must be in [0, %d) range!", word.getWord(), request.getRow(), request.getColumn(), size));
         }
 
-        if (!isActive) {
-            logger.error("Board is deactivated!");
-            return Optional.empty();
+        if (column == -1) {
+            throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s' to [%d, %d], column must be in [0, %d) range!", word.getWord(), request.getRow(), request.getColumn(), size));
         }
 
-        Cell[] cells = new Cell[length];
-        boolean boardEmpty = isEmpty;
+        boolean boardEmpty = moves == null || moves.isEmpty();
 
         for (int i = 0; i < length; i++) {
             int currentRow    = isHorizontal ? row : row + i;
             int currentColumn = isHorizontal ? column + i : column;
 
-            Cell existingCell = board[currentRow][currentColumn];
+            Cell existingCell = cells == null ? null : cells[currentRow][currentColumn];
             Cell newCell      = new Cell(currentRow, currentColumn, wordString.charAt(i));
 
             if (!boardEmpty && i == 0 && existingCell == null) {
-                logger.error("Cannot add word '{}' to [{}, {}] {}, cannot start from empty cell [{}, {}] on a non-empty board!", wordString, row, column, isHorizontal ? "horizontally" : "vertically", currentRow, currentColumn);
-                return Optional.empty();
+                throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s' to [%d, %d] %s, cannot start from empty cell on a non-empty board!", word.getWord(), request.getRow(), request.getColumn(), isHorizontal ? "horizontally" : "vertically"));
             }
 
             if (existingCell != null && i != 0 && existingCell.letter != newCell.letter) {
-                logger.error("Cannot add word '{}' to [{}, {}] {}, cell [{}, {}] already has letter '{}'!", wordString, row, column, isHorizontal ? "horizontally" : "vertically", currentRow, currentColumn, existingCell.letter);
-                return Optional.empty();
+                throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s' to [%d, %d] %s, cell [%d, %d] already has letter '%s'!", word.getWord(), request.getRow(), request.getColumn(), isHorizontal ? "horizontally" : "vertically", currentRow, currentColumn, existingCell.letter));
             }
 
             if (existingCell != null && existingCell.letter != newCell.letter) {
-                logger.error("Cannot add word '{}' to [{}, {}] {}, cell [{}, {}] already has letter '{}'!", wordString, row, column, isHorizontal ? "horizontally" : "vertically", currentRow, currentColumn, existingCell.letter);
-                return Optional.empty();
+                throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s' to [%d, %d] %s, word does not start with letter '%s'!", word.getWord(), request.getRow(), request.getColumn(), isHorizontal ? "horizontally" : "vertically", existingCell.letter));
             }
 
-
-            logger.info("Adding letter '{}' to cell [{}, {}]", newCell.letter, currentRow, currentColumn);
-            cells[i] = existingCell != null ? existingCell : newCell;
             boardEmpty = false;
+
+            logger.info("Letter '{}' will be added to cell [{}, {}]", newCell.letter, currentRow, currentColumn);
         }
 
-        Word word = new Word(row, column, cells);
-
-        return Optional.of(word);
+        return new Move(this, word, row, column, isHorizontal);
     }
 
     public void deactivate() {
-        setActive(false);
+        setIsActive(false);
     }
 
     public String print() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < DEFAULT_SIZE; i++) {
-            for (int j = 0; j < DEFAULT_SIZE; j++) {
-                Cell cell = board[i][j];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Cell cell = cells[i][j];
 
                 if (j == 1) { sb.append("|"); }
                 sb.append(String.format(" %s ", cell == null ? ' ' : cell.letter));
-                if (j > 0 && j < DEFAULT_SIZE - 1) { sb.append("|"); }
+                if (j > 0 && j < size - 1) { sb.append("|"); }
             }
 
-            if (i < DEFAULT_SIZE - 1) {
+            if (i < size - 1) {
                 sb.append("\n");
-                for (int j = 0; j < DEFAULT_SIZE; j++) {
+                for (int j = 0; j < size; j++) {
                     if (j == 1) { sb.append("|"); }
                     sb.append("---");
-                    if (j > 0 && j < DEFAULT_SIZE - 1) { sb.append("|"); }
+                    if (j > 0 && j < size - 1) { sb.append("|"); }
                 }
                 sb.append("\n");
             }
         }
         return sb.toString();
-    }
-
-    public String[][] getLetters() {
-        String[][] letters = new String[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                Cell cell = board == null ? null : board[i][j];
-                letters[i][j] = cell == null ? "" : String.valueOf(cell.letter);
-            }
-        }
-        return letters;
     }
 
     @Override public String toString() {
@@ -246,30 +208,32 @@ public final class Board {
     }
 
     public static final class Cell {
-        public final int row;
-        public final int column;
-        public final char letter;
-        public final int point;
+        private int row;
+        private int column;
+        private char letter;
+        private int point;
 
         private Cell(int row, int column, char letter) {
             this.row    = row;
             this.column = column;
-            this.letter = Letters.upperCase(letter);
-            this.point  = Letters.pointOf(this.letter);
+            this.letter = Letters.lowerCase(letter);
+            this.point  = Letters.pointsOf(this.letter);
         }
-    }
 
-    public static final class Word {
-        public final int row;
-        public final int column;
-        public final Cell[] cells;
-        public final int point;
+        public int getRow() {
+            return row;
+        }
 
-        private Word(int row, int column, Cell[] cells) {
-            this.row    = row;
-            this.column = column;
-            this.cells  = cells;
-            this.point  = Stream.of(cells).map(c -> c.point).reduce(0, Integer::sum);
+        public int getColumn() {
+            return column;
+        }
+
+        public char getLetter() {
+            return letter;
+        }
+
+        public int getPoint() {
+            return point;
         }
     }
 }
