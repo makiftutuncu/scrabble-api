@@ -7,11 +7,13 @@
         <property name="hibernate.connection.url">jdbc:postgresql://0.0.0.0:5432/scrabble</property>
         <property name="hibernate.connection.username">scrabble-user</property>
         <property name="hibernate.connection.password">scrabble-pass</property>
-        <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.connection.pool_size">10</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
 
+        <mapping class="com.github.makiftutuncu.scrabbleapi.models.Board" />
+        <mapping class="com.github.makiftutuncu.scrabbleapi.models.Move" />
         <mapping class="com.github.makiftutuncu.scrabbleapi.models.Word" />
     </session-factory>
 </hibernate-configuration>

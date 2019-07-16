@@ -19,11 +19,11 @@ public class WordRepository {
         logger.info("Getting word {} from DB", word);
 
         return HibernateUtils.withSession(session -> {
-            Query query = session
+            Query<Word> query = session
                     .createQuery("SELECT w FROM Word w WHERE w.word = :word", Word.class)
                     .setParameter("word", word);
 
-            return Optional.ofNullable((Word) query.uniqueResult());
+            return query.uniqueResultOptional();
         });
     }
 }

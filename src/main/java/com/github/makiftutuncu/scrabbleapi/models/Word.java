@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.StringJoiner;
 
 @Entity
-@Table(name = "words", uniqueConstraints = @UniqueConstraint(columnNames = {"word"}))
+@Table(name = "words")
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +37,8 @@ public class Word {
         this.word = word;
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", "{", "}")
+    @Override public String toString() {
+        return new StringJoiner(",", "{", "}")
                 .add("\"id\":" + id)
                 .add("\"word\":\"" + word + "\"")
                 .toString();

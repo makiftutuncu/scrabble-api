@@ -6,12 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 @Entity
-@Table(name = "boards", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
+@Table(name = "boards")
 public final class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,9 @@ public final class Board {
     @Column(name = "is_active")
     private boolean isActive;
 
+    @OneToMany(mappedBy = "board", targetEntity = Move.class, fetch = FetchType.EAGER)
+    private List<Move> moves;
+
     public Board() {}
 
     public Board(int id, String name, int size, boolean isActive) {
@@ -37,12 +41,16 @@ public final class Board {
         this.board = new Cell[size][size];
     }
 
+    @Transient
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Transient
     public static final int DEFAULT_SIZE = 15;
 
+    @Transient
     private Cell[][] board;
 
+    @Transient
     private boolean isEmpty = true;
 
     public static Board from(CreateBoardRequest request) {
@@ -79,6 +87,15 @@ public final class Board {
 
     private void setActive(boolean active) {
         isActive = active;
+    }
+
+    public List<Move> getMoves() {
+        return moves;
+    }
+
+    public Board setMoves(List<Move> moves) {
+        this.moves = moves;
+        return this;
     }
 
     /**
@@ -212,16 +229,15 @@ public final class Board {
         String[][] letters = new String[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                Cell cell = board[i][j];
+                Cell cell = board == null ? null : board[i][j];
                 letters[i][j] = cell == null ? "" : String.valueOf(cell.letter);
             }
         }
         return letters;
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", "{", "}")
+    @Override public String toString() {
+        return new StringJoiner(",", "{", "}")
                 .add("\"id\":" + id)
                 .add("\"name\":\"" + name + "\"")
                 .add("\"size\":" + size)

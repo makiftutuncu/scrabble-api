@@ -3,7 +3,7 @@ package com.github.makiftutuncu.scrabbleapi.utilities;
 import org.flywaydb.core.Flyway;
 import org.springframework.stereotype.Component;
 
-@Component("flywayMigrations")
+@Component
 public class FlywayMigrations {
     private final String host     = "localhost";
     private final int port        = 5432;

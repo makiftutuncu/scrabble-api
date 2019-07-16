@@ -3,6 +3,7 @@ package com.github.makiftutuncu.scrabbleapi.controllers;
 import com.github.makiftutuncu.scrabbleapi.services.BoardService;
 import com.github.makiftutuncu.scrabbleapi.views.BoardResponse;
 import com.github.makiftutuncu.scrabbleapi.views.CreateBoardRequest;
+import com.github.makiftutuncu.scrabbleapi.views.MoveResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,12 @@ public class BoardController {
     BoardResponse getBoard(@PathVariable(name = "id") int id) {
         logger.info("Getting board {}", id);
         return boardService.getBoard(id);
+    }
+
+    @RequestMapping(value = "/{id}/moves", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    List<MoveResponse> getMoves(@PathVariable(name = "id") int id) {
+        logger.info("Getting moves of board {}", id);
+        return boardService.getMoves(id);
     }
 }

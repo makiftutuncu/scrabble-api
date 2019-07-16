@@ -19,7 +19,7 @@ public class CreateBoardRequest {
     }
 
     @Override public String toString() {
-        return new StringJoiner(", ", "{", "}")
+        return new StringJoiner(",", "{", "}")
                 .add("\"name\":\"" + name + "\"")
                 .add("\"size\":" + size)
                 .toString();

@@ -48,6 +48,10 @@ public final class Letters {
         return points.getOrDefault(upperCase(letter), 0);
     }
 
+    public static int pointsOf(String word) {
+        return word.chars().map(c -> pointOf((char) c)).reduce(0, Integer::sum);
+    }
+
     public static boolean isValid(char letter) {
         return points.containsKey(upperCase(letter));
     }
