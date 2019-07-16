@@ -16,7 +16,7 @@ public class Move {
     @Access(AccessType.PROPERTY)
     private Board board;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @Access(AccessType.PROPERTY)
     private Word word;
 

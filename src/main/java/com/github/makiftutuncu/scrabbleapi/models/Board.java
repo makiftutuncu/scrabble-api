@@ -67,9 +67,7 @@ public class Board {
     }
 
     private void setSize(int size) {
-        logger.error("AKIF - setting size");
         this.size = size;
-        this.cells = new Cell[size][size];
     }
 
     public boolean getIsActive() {
@@ -81,14 +79,15 @@ public class Board {
     }
 
     public List<Move> getMoves() {
+        if (moves == null) {
+            moves = new ArrayList<>();
+        }
         return moves;
     }
 
     public void setMoves(List<Move> moves) {
-        logger.error("AKIF - setting moves");
-        this.moves = new ArrayList<>();
-        for (Move move : moves) {
-            addMove(move);
+        if (moves != null) {
+            getMoves().addAll(moves);
         }
     }
 
@@ -97,24 +96,8 @@ public class Board {
 
     public static final int DEFAULT_SIZE = 15;
 
-    @Transient
-    private Cell[][] cells;
-
     public void addMove(Move move) {
-        int row              = move.getRow();
-        int column           = move.getColumn();
-        String word          = move.getWord().getWord();
-        int length           = word.length();
-        boolean isHorizontal = move.getIsHorizontal();
-
-        for (int i = 0; i < length; i++) {
-            int currentRow    = isHorizontal ? row : row + i;
-            int currentColumn = isHorizontal ? column + i : column;
-            Cell cell = new Cell(currentRow, currentColumn, word.charAt(i));
-            cells[currentRow][currentColumn] = cell;
-        }
-
-        moves.add(move);
+        getMoves().add(move);
     }
 
     public Move prepareMove(Word word, AddMoveRequest request) {
@@ -141,6 +124,7 @@ public class Board {
             throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s' to [%d, %d], column must be in [0, %d) range!", word.getWord(), request.getRow(), request.getColumn(), size));
         }
 
+        Cell[][] cells = getCells();
         boolean boardEmpty = moves == null || moves.isEmpty();
 
         for (int i = 0; i < length; i++) {
@@ -176,9 +160,10 @@ public class Board {
 
     public String print() {
         StringBuilder sb = new StringBuilder();
+        Cell[][] cells = getCells();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                Cell cell = cells[i][j];
+                Cell cell = cells == null ? null : cells[i][j];
 
                 if (j == 1) { sb.append("|"); }
                 sb.append(String.format(" %s ", cell == null ? ' ' : cell.letter));
@@ -196,6 +181,30 @@ public class Board {
             }
         }
         return sb.toString();
+    }
+
+    @Transient
+    private Cell[][] getCells() {
+        if (moves == null) {
+            return null;
+        }
+
+        Cell[][] cells = new Cell[size][size];
+        for (Move move : moves) {
+            char[] chars = move.getWord().getWord().toCharArray();
+            int row = move.getRow();
+            int column = move.getColumn();
+            boolean isHorizontal = move.getIsHorizontal();
+            int count = 0;
+            for (char c : chars) {
+                int i = isHorizontal ? row : row + count;
+                int j = isHorizontal ? column + count : column;
+                cells[i][j] = new Cell(i, j, c);
+                count++;
+            }
+        }
+
+        return cells;
     }
 
     @Override public String toString() {
@@ -216,7 +225,7 @@ public class Board {
         private Cell(int row, int column, char letter) {
             this.row    = row;
             this.column = column;
-            this.letter = Letters.lowerCase(letter);
+            this.letter = letter;
             this.point  = Letters.pointsOf(this.letter);
         }
 

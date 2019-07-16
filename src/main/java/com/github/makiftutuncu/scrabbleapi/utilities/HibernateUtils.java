@@ -2,6 +2,7 @@ package com.github.makiftutuncu.scrabbleapi.utilities;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,21 @@ public class HibernateUtils {
     public static <T> T withSession(Function<Session, T> action) {
         try (Session session = getSessionFactory().openSession()) {
             return action.apply(session);
+        }
+    }
+
+    public static <T> T withTransaction(Function<Session, T> action) {
+        Transaction transaction = null;
+        try (Session session = getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            T result = action.apply(session);
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
         }
     }
 }

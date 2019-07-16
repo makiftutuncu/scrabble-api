@@ -49,7 +49,6 @@ public class BoardService {
         try {
             return HibernateUtils.withSession(session -> {
                 session.save(board);
-                session.flush();
                 return new BoardResponse(board);
             });
         } catch (Exception e) {
@@ -76,9 +75,8 @@ public class BoardService {
 
         board.deactivate();
 
-        return HibernateUtils.withSession(session -> {
-            session.save(board);
-            session.flush();
+        return HibernateUtils.withTransaction(session -> {
+            session.update(board);
             return new BoardResponse(board);
         });
     }
@@ -92,7 +90,7 @@ public class BoardService {
 
     public MoveResponse addMove(int boardId, AddMoveRequest request) {
         Board board = boardRepository
-                .getBoard(boardId)
+                .getBoard(boardId, false)
                 .orElseThrow(() -> new ScrabbleException(HttpStatus.NOT_FOUND, String.format("Board %d is not found!", boardId)));
 
         Word word = wordRepository
@@ -106,7 +104,6 @@ public class BoardService {
         try {
             return HibernateUtils.withSession(session -> {
                 session.save(move);
-                session.flush();
                 logger.info("Current board\n{}", board.print());
                 return new MoveResponse(move);
             });

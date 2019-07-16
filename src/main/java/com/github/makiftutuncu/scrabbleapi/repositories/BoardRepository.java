@@ -26,20 +26,23 @@ public class BoardRepository {
         });
     }
 
-    public Optional<Board> getBoard(int id) {
-        logger.info("Getting board {} from DB", id);
+    public Optional<Board> getBoard(int id, boolean onlyActive) {
+        logger.info("Getting board {} {}from DB", id, onlyActive ? "only if it is active " : "");
 
         return HibernateUtils.withSession(session -> {
             Query<Board> query = session
-                    .createQuery("SELECT b FROM Board b WHERE b.id = :id AND b.isActive = :isActive", Board.class)
-                    .setParameter("id", id)
-                    .setParameter("isActive", true);
+                    .createQuery("SELECT b FROM Board b WHERE b.id = :id" + (onlyActive ? " AND b.isActive = :isActive" : ""), Board.class)
+                    .setParameter("id", id);
 
-            Optional<Board> maybeBoard = query.uniqueResultOptional();
+            if (onlyActive) {
+                query.setParameter("isActive", true);
+            }
 
-            maybeBoard.ifPresent(Board::getMoves);
-
-            return maybeBoard;
+            return query.uniqueResultOptional();
         });
+    }
+
+    public Optional<Board> getBoard(int id) {
+        return getBoard(id, true);
     }
 }
