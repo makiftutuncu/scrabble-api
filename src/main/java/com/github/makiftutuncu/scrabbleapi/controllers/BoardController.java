@@ -71,6 +71,13 @@ public class BoardController {
         return boardService.addMove(boardId, request);
     }
 
+    @RequestMapping(value = "/{id}/multipleMoves", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    List<MoveResponse> addMoves(@PathVariable(name = "id") int boardId, @RequestBody List<AddMoveRequest> requests) {
+        logger.info("Adding {} moves to board {}", requests.size(), boardId);
+        return boardService.addMoves(boardId, requests);
+    }
+
     @RequestMapping(value = "/{id}/words", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<WordResponse> getWords(@PathVariable(name = "id") int id) {

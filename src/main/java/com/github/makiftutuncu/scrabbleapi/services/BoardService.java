@@ -16,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +53,7 @@ public class BoardService {
         } catch (Exception e) {
             Throwable rootCause = NestedExceptionUtils.getRootCause(e);
             if (rootCause instanceof SQLException && rootCause.getMessage().contains("already exists")) {
-                throw new ScrabbleException(HttpStatus.BAD_GATEWAY, String.format("Board '%s' already exists!", request.getName()));
+                throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Board '%s' already exists!", request.getName()));
             }
 
             throw e;
@@ -118,7 +120,46 @@ public class BoardService {
         } catch (Exception e) {
             Throwable rootCause = NestedExceptionUtils.getRootCause(e);
             if (rootCause instanceof SQLException && rootCause.getMessage().contains("already exists")) {
-                throw new ScrabbleException(HttpStatus.BAD_GATEWAY, String.format("Word '%s' is already added to board %d!", word.getWord(), boardId));
+                throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Word '%s' is already added to board %d!", word.getWord(), boardId));
+            }
+
+            throw e;
+        }
+    }
+
+    public List<MoveResponse> addMoves(int boardId, List<AddMoveRequest> requests) {
+        Board board = boardRepository
+                .getBoard(boardId, false)
+                .orElseThrow(() -> new ScrabbleException(HttpStatus.NOT_FOUND, String.format("Board %d is not found!", boardId)));
+
+        List<String> wordStrings = requests.stream().map(AddMoveRequest::getWord).collect(Collectors.toList());
+
+        Map<String, Word> wordMap = wordRepository.getWords(wordStrings).stream().reduce(
+                new HashMap<>(),
+                (map, word) -> { map.put(word.getWord(), word); return map; },
+                (map1, map2) -> { map1.putAll(map2); return map1; }
+        );
+
+        if (wordStrings.size() != wordMap.size()) {
+            throw new ScrabbleException(HttpStatus.BAD_REQUEST, "Some of given words were not valid!");
+        }
+
+        requests.forEach(request -> {
+            Word word = wordMap.get(request.getWord());
+            Move move = board.prepareMove(word, request);
+            board.addMove(move);
+        });
+
+        try {
+            return HibernateUtils.withTransaction(session -> {
+                session.saveOrUpdate(board);
+                logger.info("Current board\n{}", board.print());
+                return board.getMoves().stream().map(MoveResponse::new).collect(Collectors.toList());
+            });
+        } catch (Exception e) {
+            Throwable rootCause = NestedExceptionUtils.getRootCause(e);
+            if (rootCause instanceof SQLException && rootCause.getMessage().contains("already exists")) {
+                throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("One of the words is already added to board %d!", boardId));
             }
 
             throw e;
