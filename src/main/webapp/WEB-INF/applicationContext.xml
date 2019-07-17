@@ -16,6 +16,8 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <context:property-placeholder location="classpath:database.properties" />
+
     <context:component-scan base-package="com.github.makiftutuncu.scrabbleapi"/>
 
 </beans>
