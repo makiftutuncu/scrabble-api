@@ -44,11 +44,7 @@ public class MoveResponse {
         if (this == o) return true;
         if (!(o instanceof MoveResponse)) return false;
         MoveResponse that = (MoveResponse) o;
-        return this.row == that.row &&
-               this.column == that.column &&
-               this.isHorizontal == that.isHorizontal &&
-               this.points == that.points &&
-               this.word.equals(that.word);
+        return this.row == that.row && this.column == that.column && this.isHorizontal == that.isHorizontal && this.points == that.points && this.word.equals(that.word);
     }
 
     @Override public int hashCode() {

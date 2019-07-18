@@ -103,10 +103,6 @@ public class Board {
 
     public static final int DEFAULT_SIZE = 15;
 
-    public void addMove(Move move) {
-        getMoves().add(move);
-    }
-
     public Move prepareMove(Word word, AddMoveRequest request) {
         if (!isActive) {
             throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Cannot add word '%s', board '%d' is deactivated!", word.getWord(), id));
@@ -159,6 +155,10 @@ public class Board {
         }
 
         return new Move(this, word, row, column, isHorizontal);
+    }
+
+    public void addMove(Move move) {
+        getMoves().add(move);
     }
 
     public void deactivate() {
