@@ -18,6 +18,11 @@ public class Word {
 
     public Word() {}
 
+    public Word(int id, String word) {
+        this.id = id;
+        this.word = word;
+    }
+
     public Word(String word) {
         this.word = word;
     }

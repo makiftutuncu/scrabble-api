@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @Entity
@@ -39,6 +40,11 @@ public class Board {
     private List<Move> moves;
 
     public Board() {}
+
+    public Board(String name, int size) {
+        setName(name);
+        setSize(size);
+    }
 
     public Board(CreateBoardRequest request) {
         setName(request.getName());
@@ -205,6 +211,17 @@ public class Board {
         }
 
         return cells;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Board)) return false;
+        Board that = (Board) o;
+        return this.id == that.id && this.size == that.size && this.isActive == that.isActive && this.name.equals(that.name) && this.moves.equals(that.moves);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(id, name, size, isActive, moves);
     }
 
     @Override public String toString() {

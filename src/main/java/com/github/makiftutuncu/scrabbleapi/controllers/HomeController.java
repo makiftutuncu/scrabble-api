@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("homeController")
 @RequestMapping(value = "/")
 public class HomeController {
     private final Logger logger = LoggerFactory.getLogger(getClass());

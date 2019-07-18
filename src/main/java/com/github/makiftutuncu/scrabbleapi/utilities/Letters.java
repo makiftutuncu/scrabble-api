@@ -48,15 +48,11 @@ public final class Letters {
         return String.valueOf(letter).toLowerCase(locale).charAt(0);
     }
 
-    public static int pointsOf(char letter) {
-        return points.getOrDefault(lowerCase(letter), 0);
-    }
-
     public static int pointsOf(String word) {
         return word.chars().map(c -> pointsOf((char) c)).reduce(0, Integer::sum);
     }
 
-    public static boolean isValid(char letter) {
-        return points.containsKey(lowerCase(letter));
+    public static int pointsOf(char letter) {
+        return points.getOrDefault(lowerCase(letter), 0);
     }
 }

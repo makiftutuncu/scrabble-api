@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
+@Component("wordRepository")
 public class WordRepository {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

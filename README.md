@@ -38,7 +38,9 @@ Before running the application for the first time, you will need to set up the d
 
 The database schema will automatically be migrated via [Flyway](https://flywaydb.org/).
 
-HTTP and debug ports, application server etc. can be configured in [build.gradle](build.gradle). Database credentials can be configured in [database.properties](src/main/resources/database.properties) and [hibernate.cfg.xml](src/main/resources/hibernate.cfg.xml). Please note that default configuration is aligned with [docker-compose.yml](docker-compose.yml) so you might need to update it as well. 
+HTTP and debug ports, application server etc. can be configured in [build.gradle](build.gradle).
+
+Database credentials can be configured in [database.properties](src/main/resources/database.properties) and [hibernate.cfg.xml](src/main/resources/hibernate.cfg.xml) for running the application. For testing, they are in [database.test.properties](src/test/resources/database.test.properties) and [hibernate.cfg.xml](src/test/resources/hibernate.cfg.xml). Please note that default configuration is aligned with [docker-compose.yml](docker-compose.yml) so you might need to update it as well. 
 
 ## Testing
 

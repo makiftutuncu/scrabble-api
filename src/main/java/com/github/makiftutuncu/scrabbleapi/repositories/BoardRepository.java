@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Component("boardRepository")
 public class BoardRepository {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service
+@Service("boardService")
 public class BoardService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

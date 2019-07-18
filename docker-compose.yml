@@ -12,7 +12,20 @@ services:
       - POSTGRES_USER=scrabble-user
       - POSTGRES_PASSWORD=scrabble-pass
       - POSTGRES_DB=scrabble
+  scrabble-test:
+    container_name: scrabble-test
+    image: postgres:alpine
+    ports:
+      - 5433:5432
+    volumes:
+      - scrabble-test-volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=scrabble-user
+      - POSTGRES_PASSWORD=scrabble-pass
+      - POSTGRES_DB=scrabble
 
 volumes:
   scrabble-volume:
+    driver: local
+  scrabble-test-volume:
     driver: local

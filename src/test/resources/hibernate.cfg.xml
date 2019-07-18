@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://0.0.0.0:5433/scrabble</property>
+        <property name="hibernate.connection.username">scrabble-user</property>
+        <property name="hibernate.connection.password">scrabble-pass</property>
+        <property name="hibernate.connection.pool_size">10</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
+
+        <mapping class="com.github.makiftutuncu.scrabbleapi.models.Board" />
+        <mapping class="com.github.makiftutuncu.scrabbleapi.models.Move" />
+        <mapping class="com.github.makiftutuncu.scrabbleapi.models.Word" />
+    </session-factory>
+</hibernate-configuration>
