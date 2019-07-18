@@ -3,6 +3,8 @@ package com.github.makiftutuncu.scrabbleapi.views;
 import com.github.makiftutuncu.scrabbleapi.models.Move;
 import com.github.makiftutuncu.scrabbleapi.utilities.Letters;
 
+import java.util.Objects;
+
 public class MoveResponse {
     private String word;
     private int row;
@@ -36,5 +38,20 @@ public class MoveResponse {
 
     public int getPoints() {
         return points;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MoveResponse)) return false;
+        MoveResponse that = (MoveResponse) o;
+        return this.row == that.row &&
+               this.column == that.column &&
+               this.isHorizontal == that.isHorizontal &&
+               this.points == that.points &&
+               this.word.equals(that.word);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(word, row, column, isHorizontal, points);
     }
 }

@@ -57,11 +57,11 @@ public class BoardController {
         return boardService.getMoves(id);
     }
 
-    @RequestMapping(value = "/{id}/moves/{count}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}/moves/{step}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    List<MoveResponse> getMoves(@PathVariable(name = "id") int id, @PathVariable(name = "count") int count) {
-        logger.info("Getting {} moves of board {}", count, id);
-        return boardService.getMoves(id, count);
+    List<MoveResponse> getMoves(@PathVariable(name = "id") int id, @PathVariable(name = "step") int step) {
+        logger.info("Getting {} moves of board {}", step, id);
+        return boardService.getMoves(id, step);
     }
 
     @RequestMapping(value = "/{id}/moves", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

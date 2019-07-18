@@ -87,8 +87,18 @@ public class BoardService {
                 .orElseThrow(() -> new ScrabbleException(HttpStatus.NOT_FOUND, String.format("Board %d is not found!", id)));
     }
 
-    public List<MoveResponse> getMoves(int id, int count) {
-        return getMoves(id).subList(0, count);
+    public List<MoveResponse> getMoves(int id, int step) {
+        if (step < 1) {
+            throw new ScrabbleException(HttpStatus.BAD_REQUEST, String.format("Step %d is invalid, it should be greater than 1!", step));
+        }
+
+        List<MoveResponse> moves = getMoves(id);
+
+        if (step > moves.size()) {
+            return moves;
+        }
+
+        return moves.subList(0, step);
     }
 
     public List<WordResponse> getWords(int id) {

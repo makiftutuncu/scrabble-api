@@ -11,8 +11,7 @@ import org.springframework.core.NestedExceptionUtils;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class HibernateUtilsTest extends SpringTest {
     @Before public void truncate() {
@@ -47,7 +46,7 @@ public class HibernateUtilsTest extends SpringTest {
         );
     }
 
-    public void testWithTransactionRollback() {
+    @Test public void testWithTransactionRollback() {
         Board board1 = new Board("test-board-1", 3);
         Board board2 = new Board("test-board-2", 3);
 

@@ -4,6 +4,7 @@ import com.github.makiftutuncu.scrabbleapi.models.Board;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BoardResponse {
@@ -45,5 +46,16 @@ public class BoardResponse {
 
     public int getPoints() {
         return points;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BoardResponse)) return false;
+        BoardResponse that = (BoardResponse) o;
+        return this.id == that.id && this.size == that.size && this.isActive == that.isActive && this.points == that.points && this.name.equals(that.name) && this.words.equals(that.words);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(id, name, size, isActive, words, points);
     }
 }

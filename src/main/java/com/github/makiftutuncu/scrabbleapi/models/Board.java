@@ -44,6 +44,7 @@ public class Board {
     public Board(String name, int size) {
         setName(name);
         setSize(size);
+        setIsActive(true);
     }
 
     public Board(CreateBoardRequest request) {

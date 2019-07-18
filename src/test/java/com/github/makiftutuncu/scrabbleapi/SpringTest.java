@@ -16,9 +16,9 @@ import org.springframework.web.context.WebApplicationContext;
 @WebAppConfiguration
 public abstract class SpringTest {
     @Autowired
-    WebApplicationContext wac;
+    protected WebApplicationContext wac;
 
-    MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
     @Before
     public void buildMockMvc() {
