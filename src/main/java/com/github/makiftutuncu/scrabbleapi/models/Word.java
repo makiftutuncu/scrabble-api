@@ -1,6 +1,7 @@
 package com.github.makiftutuncu.scrabbleapi.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @Entity
@@ -48,5 +49,16 @@ public class Word {
                 .add("\"id\":" + id)
                 .add("\"word\":\"" + word + "\"")
                 .toString();
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Word)) return false;
+        Word that = (Word) o;
+        return this.id == that.id && this.word.equals(that.word);
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(id, word);
     }
 }
