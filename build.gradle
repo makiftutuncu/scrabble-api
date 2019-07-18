@@ -22,7 +22,8 @@ dependencies {
     compile 'org.flywaydb:flyway-core:5.2.4'
     compile 'com.fasterxml.jackson.core:jackson-core:2.9.9'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
-    testCompile 'org.junit.jupiter:junit-jupiter:5.5.0'
+    testCompile 'org.springframework:spring-test:4.3.24.RELEASE'
+    testCompile 'junit:junit:4.12'
 }
 
 gretty {
@@ -51,8 +52,12 @@ gretty {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnit()
     testLogging {
         events "passed", "skipped", "failed"
+        showCauses = true
+        showExceptions = true
+        showStackTraces = true
+        exceptionFormat = "full"
     }
 }

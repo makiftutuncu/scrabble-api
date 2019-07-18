@@ -42,7 +42,7 @@ HTTP and debug ports, application server etc. can be configured in [build.gradle
 
 ## Testing
 
-Scrabble API contains [JUnit](https://junit.org/junit5/) tests. To run all the tests, use `test` task of Gradle.
+Scrabble API contains [JUnit](https://junit.org/junit4/) tests. To run all the tests, use `test` task of Gradle.
 
 ## Contributing
 
