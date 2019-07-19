@@ -20,11 +20,11 @@ public class BoardResponseTest {
 
         assertEquals(response.getId(), board.getId());
         assertEquals(response.getName(), board.getName());
-        assertEquals(response.getName(), board.getName());
         assertEquals(response.getSize(), board.getSize());
         assertEquals(response.getIsActive(), board.getIsActive());
         assertEquals(response.getWords(), Collections.emptyList());
         assertEquals(response.getPoints(), 0);
+        assertEquals(response.toString(), "{\"id\":0,\"name\":\"test\",\"size\":8,\"isActive\":true,\"words\":[],\"points\":0}");
     }
 
     @Test public void testWithNonEmptyBoard() {
@@ -41,5 +41,6 @@ public class BoardResponseTest {
         assertEquals(response.getIsActive(), board.getIsActive());
         assertEquals(response.getWords(), Collections.singletonList(new WordResponse("ekmek")));
         assertEquals(response.getPoints(), 6);
+        assertEquals(response.toString(), "{\"id\":0,\"name\":\"test\",\"size\":8,\"isActive\":true,\"words\":[{\"word\":\"ekmek\",\"points\":6}],\"points\":6}");
     }
 }

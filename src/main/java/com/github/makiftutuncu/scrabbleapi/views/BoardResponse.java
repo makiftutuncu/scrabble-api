@@ -2,9 +2,7 @@ package com.github.makiftutuncu.scrabbleapi.views;
 
 import com.github.makiftutuncu.scrabbleapi.models.Board;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BoardResponse {
@@ -57,5 +55,20 @@ public class BoardResponse {
 
     @Override public int hashCode() {
         return Objects.hash(id, name, size, isActive, words, points);
+    }
+
+    @Override public String toString() {
+        StringJoiner joiner = new StringJoiner(",", "[", "]");
+        words.forEach(word -> joiner.add(word.toString()));
+        String wordsString = joiner.toString();
+
+        return new StringJoiner(",", "{", "}")
+                .add("\"id\":" + id)
+                .add("\"name\":\"" + name + "\"")
+                .add("\"size\":" + size)
+                .add("\"isActive\":" + isActive)
+                .add("\"words\":" + wordsString)
+                .add("\"points\":" + points)
+                .toString();
     }
 }

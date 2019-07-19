@@ -3,6 +3,7 @@ package com.github.makiftutuncu.scrabbleapi.views;
 import com.github.makiftutuncu.scrabbleapi.utilities.Letters;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class WordResponse {
     private String word;
@@ -30,5 +31,12 @@ public class WordResponse {
 
     @Override public int hashCode() {
         return Objects.hash(word, points);
+    }
+
+    @Override public String toString() {
+        return new StringJoiner(",", "{", "}")
+                .add("\"word\":\"" + word + "\"")
+                .add("\"points\":" + points)
+                .toString();
     }
 }

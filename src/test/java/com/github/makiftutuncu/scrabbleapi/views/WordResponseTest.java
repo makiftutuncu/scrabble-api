@@ -12,5 +12,6 @@ public class WordResponseTest {
         WordResponse word = new WordResponse("ekmek");
 
         assertEquals(word.getPoints(), 6);
+        assertEquals(word.toString(), "{\"word\":\"ekmek\",\"points\":6}");
     }
 }

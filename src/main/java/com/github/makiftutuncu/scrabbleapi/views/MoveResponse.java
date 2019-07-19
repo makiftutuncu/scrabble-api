@@ -4,6 +4,7 @@ import com.github.makiftutuncu.scrabbleapi.models.Move;
 import com.github.makiftutuncu.scrabbleapi.utilities.Letters;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class MoveResponse {
     private String word;
@@ -49,5 +50,15 @@ public class MoveResponse {
 
     @Override public int hashCode() {
         return Objects.hash(word, row, column, isHorizontal, points);
+    }
+
+    @Override public String toString() {
+        return new StringJoiner(",", "{", "}")
+                .add("\"word\":\"" + word + "\"")
+                .add("\"row\":" + row)
+                .add("\"column\":" + column)
+                .add("\"isHorizontal\":" + isHorizontal)
+                .add("\"points\":" + points)
+                .toString();
     }
 }

@@ -23,5 +23,6 @@ public class MoveResponseTest {
         assertEquals(response.getColumn(), move.getColumn());
         assertEquals(response.getIsHorizontal(), move.getIsHorizontal());
         assertEquals(response.getPoints(), 6);
+        assertEquals(response.toString(), "{\"word\":\"ekmek\",\"row\":0,\"column\":0,\"isHorizontal\":true,\"points\":6}");
     }
 }
