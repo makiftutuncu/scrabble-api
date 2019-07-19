@@ -20,7 +20,7 @@ public class BoardRepositoryTest extends SpringTest {
     }
 
     @Test public void getActiveBoardsWithNoBoards() {
-        assertEquals(repository.getActiveBoards(), Collections.emptyList());
+        assertEquals(Collections.emptyList(), repository.getActiveBoards());
     }
 
     @Test public void getActiveBoardsWithSomeBoards() {
@@ -31,18 +31,18 @@ public class BoardRepositoryTest extends SpringTest {
         TestData.insertBoard(board1);
         TestData.insertBoard(board2);
 
-        assertEquals(repository.getActiveBoards(), Collections.singletonList(board1));
+        assertEquals(Collections.singletonList(board1), repository.getActiveBoards());
     }
 
     @Test public void getBoardThatDoesNotExist() {
-        assertEquals(repository.getBoard(-1), Optional.empty());
+        assertEquals(Optional.empty(), repository.getBoard(-1));
     }
 
     @Test public void getBoardWhenItIsActive() {
         Board board = new Board("test-board", 3);
         TestData.insertBoard(board);
 
-        assertEquals(repository.getBoard(board.getId(), true), Optional.of(board));
+        assertEquals(Optional.of(board), repository.getBoard(board.getId(), true));
     }
 
     @Test public void getBoardWhenItIsNotActive() {
@@ -50,7 +50,7 @@ public class BoardRepositoryTest extends SpringTest {
         board.deactivate();
         TestData.insertBoard(board);
 
-        assertEquals(repository.getBoard(board.getId(), true), Optional.empty());
+        assertEquals(Optional.empty(), repository.getBoard(board.getId(), true));
     }
 
     @Test public void getBoardEvenWhenItIsNotActive() {
@@ -58,6 +58,6 @@ public class BoardRepositoryTest extends SpringTest {
         board.deactivate();
         TestData.insertBoard(board);
 
-        assertEquals(repository.getBoard(board.getId(), false), Optional.of(board));
+        assertEquals(Optional.of(board), repository.getBoard(board.getId(), false));
     }
 }

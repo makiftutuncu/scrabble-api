@@ -26,7 +26,7 @@ public class BoardServiceTest extends SpringTest {
     }
 
     @Test public void getActiveBoardsWithNoBoards() {
-        assertEquals(service.getActiveBoards(), Collections.emptyList());
+        assertEquals(Collections.emptyList(), service.getActiveBoards());
     }
 
     @Test public void getActiveBoardsWithSomeBoards() {
@@ -37,7 +37,7 @@ public class BoardServiceTest extends SpringTest {
         TestData.insertBoard(board1);
         TestData.insertBoard(board2);
 
-        assertEquals(service.getActiveBoards(), Collections.singletonList(new BoardResponse(board1)));
+        assertEquals(Collections.singletonList(new BoardResponse(board1)), service.getActiveBoards());
     }
 
     @Test public void failToCreateBoardBecauseItExists() {
@@ -49,7 +49,7 @@ public class BoardServiceTest extends SpringTest {
         try {
             service.createBoard(request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("already exists"));
         }
     }
@@ -59,18 +59,18 @@ public class BoardServiceTest extends SpringTest {
         BoardResponse response = service.createBoard(request);
 
         assertTrue(response.getId() > 0);
-        assertEquals(response.getName(), request.getName());
-        assertEquals(response.getSize(), request.getSize());
+        assertEquals(request.getName(), response.getName());
+        assertEquals(request.getSize(), response.getSize());
         assertTrue(response.getIsActive());
-        assertEquals(response.getWords(), Collections.emptyList());
-        assertEquals(response.getPoints(), 0);
+        assertEquals(Collections.emptyList(), response.getWords());
+        assertEquals(0, response.getPoints());
     }
 
     @Test public void failToGetBoardBecauseItDoesNotExist() {
         try {
             service.getBoard(-1);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.NOT_FOUND);
+            assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
             assertTrue(e.getMessage().contains("not found"));
         }
     }
@@ -81,18 +81,18 @@ public class BoardServiceTest extends SpringTest {
 
         BoardResponse response = service.getBoard(board.getId());
 
-        assertEquals(response.getName(), board.getName());
-        assertEquals(response.getSize(), board.getSize());
+        assertEquals(board.getName(), response.getName());
+        assertEquals(board.getSize(), response.getSize());
         assertTrue(response.getIsActive());
-        assertEquals(response.getWords(), Collections.emptyList());
-        assertEquals(response.getPoints(), 0);
+        assertEquals(Collections.emptyList(), response.getWords());
+        assertEquals(0, response.getPoints());
     }
 
     @Test public void failToDeactivateBecauseBoardDoesNotExist() {
         try {
             service.deactivate(-1);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.NOT_FOUND);
+            assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
             assertTrue(e.getMessage().contains("not found"));
         }
     }
@@ -104,11 +104,11 @@ public class BoardServiceTest extends SpringTest {
         BoardResponse response = service.deactivate(board.getId());
 
         assertTrue(response.getId() > 0);
-        assertEquals(response.getName(), board.getName());
-        assertEquals(response.getSize(), board.getSize());
+        assertEquals(board.getName(), response.getName());
+        assertEquals(board.getSize(), response.getSize());
         assertFalse(response.getIsActive());
-        assertEquals(response.getWords(), Collections.emptyList());
-        assertEquals(response.getPoints(), 0);
+        assertEquals(Collections.emptyList(), response.getWords());
+        assertEquals(0, response.getPoints());
     }
 
     @Test public void getMovesWithNoMoves() {
@@ -117,7 +117,7 @@ public class BoardServiceTest extends SpringTest {
 
         List<MoveResponse> moves = service.getMoves(board.getId());
 
-        assertEquals(moves, Collections.emptyList());
+        assertEquals(Collections.emptyList(), moves);
     }
 
     @Test public void getMovesWithSomeMoves() {
@@ -129,15 +129,15 @@ public class BoardServiceTest extends SpringTest {
 
         List<MoveResponse> moves = service.getMoves(board.getId());
 
-        assertEquals(moves, Collections.singletonList(new MoveResponse(move)));
+        assertEquals(Collections.singletonList(new MoveResponse(move)), moves);
     }
 
     @Test public void failToGetMovesWithStepWithInvalidStep() {
         try {
             service.getMoves(-1, -1);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
-            assertEquals(e.getMessage(), "Step -1 is invalid, it should be greater than 1!");
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+            assertEquals("Step -1 is invalid, it should be greater than 1!", e.getMessage());
         }
     }
 
@@ -147,7 +147,7 @@ public class BoardServiceTest extends SpringTest {
 
         List<MoveResponse> moves = service.getMoves(board.getId(), 2);
 
-        assertEquals(moves, Collections.emptyList());
+        assertEquals(Collections.emptyList(), moves);
     }
 
     @Test public void getMovesWithStepWithSomeMoves() {
@@ -159,14 +159,14 @@ public class BoardServiceTest extends SpringTest {
 
         List<MoveResponse> moves = service.getMoves(board.getId(), 2);
 
-        assertEquals(moves, Collections.singletonList(new MoveResponse(move)));
+        assertEquals(Collections.singletonList(new MoveResponse(move)), moves);
     }
 
     @Test public void failToGetWordsBecauseBoardDoesNotExist() {
         try {
             service.getWords(-1);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.NOT_FOUND);
+            assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
             assertTrue(e.getMessage().contains("not found"));
         }
     }
@@ -177,7 +177,7 @@ public class BoardServiceTest extends SpringTest {
 
         List<WordResponse> words = service.getWords(board.getId());
 
-        assertEquals(words, Collections.emptyList());
+        assertEquals(Collections.emptyList(), words);
     }
 
     @Test public void getWordsWithSomeWords() {
@@ -189,7 +189,7 @@ public class BoardServiceTest extends SpringTest {
 
         List<WordResponse> words = service.getWords(board.getId());
 
-        assertEquals(words, Collections.singletonList(new WordResponse(word.getWord())));
+        assertEquals(Collections.singletonList(new WordResponse(word.getWord())), words);
     }
 
     @Test public void failToAddMoveBecauseBoardDoesNotExist() {
@@ -198,7 +198,7 @@ public class BoardServiceTest extends SpringTest {
         try {
             service.addMove(-1, request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.NOT_FOUND);
+            assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
             assertTrue(e.getMessage().contains("Board"));
             assertTrue(e.getMessage().contains("not found"));
         }
@@ -213,7 +213,7 @@ public class BoardServiceTest extends SpringTest {
         try {
             service.addMove(board.getId(), request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.NOT_FOUND);
+            assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
             assertTrue(e.getMessage().contains("Word"));
             assertTrue(e.getMessage().contains("not found"));
         }
@@ -228,7 +228,7 @@ public class BoardServiceTest extends SpringTest {
         try {
             service.addMove(board.getId(), request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("too long"));
         }
     }
@@ -241,11 +241,11 @@ public class BoardServiceTest extends SpringTest {
 
         MoveResponse response = service.addMove(board.getId(), request);
 
-        assertEquals(response.getWord(), request.getWord());
-        assertEquals(response.getRow(), request.getRow());
-        assertEquals(response.getColumn(), request.getColumn());
-        assertEquals(response.getIsHorizontal(), request.getIsHorizontal());
-        assertEquals(response.getPoints(), 10);
+        assertEquals(request.getWord(), response.getWord());
+        assertEquals(request.getRow(), response.getRow());
+        assertEquals(request.getColumn(), response.getColumn());
+        assertEquals(request.getIsHorizontal(), response.getIsHorizontal());
+        assertEquals(10, response.getPoints());
     }
 
     @Test public void failToAddMovesBecauseBoardDoesNotExist() {
@@ -254,7 +254,7 @@ public class BoardServiceTest extends SpringTest {
         try {
             service.addMoves(-1, Collections.singletonList(request));
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.NOT_FOUND);
+            assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
             assertTrue(e.getMessage().contains("Board"));
             assertTrue(e.getMessage().contains("not found"));
         }
@@ -270,7 +270,7 @@ public class BoardServiceTest extends SpringTest {
         try {
             service.addMoves(board.getId(), Arrays.asList(request1, request2));
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("words were not valid"));
         }
     }
@@ -285,7 +285,7 @@ public class BoardServiceTest extends SpringTest {
         try {
             service.addMoves(board.getId(), Arrays.asList(request1, request2));
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("word does not start with letter 'd'"));
         }
     }
@@ -299,22 +299,22 @@ public class BoardServiceTest extends SpringTest {
 
         List<MoveResponse> moves = service.addMoves(board.getId(), Arrays.asList(request1, request2));
 
-        assertEquals(moves.size(), 2);
+        assertEquals(2, moves.size());
 
         MoveResponse response1 = moves.get(0);
 
-        assertEquals(response1.getWord(), request1.getWord());
-        assertEquals(response1.getRow(), request1.getRow());
-        assertEquals(response1.getColumn(), request1.getColumn());
-        assertEquals(response1.getIsHorizontal(), request1.getIsHorizontal());
-        assertEquals(response1.getPoints(), 10);
+        assertEquals(request1.getWord(), response1.getWord());
+        assertEquals(request1.getRow(), response1.getRow());
+        assertEquals(request1.getColumn(), response1.getColumn());
+        assertEquals(request1.getIsHorizontal(), response1.getIsHorizontal());
+        assertEquals(10, response1.getPoints());
 
         MoveResponse response2 = moves.get(1);
 
-        assertEquals(response2.getWord(), request2.getWord());
-        assertEquals(response2.getRow(), request2.getRow());
-        assertEquals(response2.getColumn(), request2.getColumn());
-        assertEquals(response2.getIsHorizontal(), request2.getIsHorizontal());
-        assertEquals(response2.getPoints(), 9);
+        assertEquals(request2.getWord(), response2.getWord());
+        assertEquals(request2.getRow(), response2.getRow());
+        assertEquals(request2.getColumn(), response2.getColumn());
+        assertEquals(request2.getIsHorizontal(), response2.getIsHorizontal());
+        assertEquals(9, response2.getPoints());
     }
 }

@@ -11,6 +11,6 @@ public class ScrabbleExceptionResponseTest {
     @Test public void test() {
         ScrabbleExceptionResponse response = new ScrabbleExceptionResponse("test");
 
-        assertEquals(response.getMessage(), "test");
+        assertEquals("test", response.getMessage());
     }
 }

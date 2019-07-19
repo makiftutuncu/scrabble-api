@@ -20,18 +20,18 @@ public class WordRepositoryTest extends SpringTest {
     }
 
     @Test public void getWordThatDoesNotExist() {
-        assertEquals(repository.getWord("java"), Optional.empty());
+        assertEquals(Optional.empty(), repository.getWord("java"));
     }
 
     @Test public void getWord() {
-        assertEquals(repository.getWord("hava"), Optional.of(new Word(439482, "hava")));
+        assertEquals(Optional.of(new Word(439482, "hava")), repository.getWord("hava"));
     }
 
     @Test public void getWordsWithNull() {
-        assertEquals(repository.getWords(null), Collections.emptyList());
+        assertEquals(Collections.emptyList(), repository.getWords(null));
     }
 
     @Test public void getWords() {
-        assertEquals(repository.getWords(Arrays.asList("hava", "civa")), Collections.singletonList(new Word(439482, "hava")));
+        assertEquals(Collections.singletonList(new Word(439482, "hava")), repository.getWords(Arrays.asList("hava", "civa")));
     }
 }

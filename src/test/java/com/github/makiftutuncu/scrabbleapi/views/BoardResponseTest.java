@@ -18,13 +18,13 @@ public class BoardResponseTest {
         Board board = new Board(request);
         BoardResponse response = new BoardResponse(board);
 
-        assertEquals(response.getId(), board.getId());
-        assertEquals(response.getName(), board.getName());
-        assertEquals(response.getSize(), board.getSize());
-        assertEquals(response.getIsActive(), board.getIsActive());
-        assertEquals(response.getWords(), Collections.emptyList());
-        assertEquals(response.getPoints(), 0);
-        assertEquals(response.toString(), "{\"id\":0,\"name\":\"test\",\"size\":8,\"isActive\":true,\"words\":[],\"points\":0}");
+        assertEquals(board.getId(), response.getId());
+        assertEquals(board.getName(), response.getName());
+        assertEquals(board.getSize(), response.getSize());
+        assertEquals(board.getIsActive(), response.getIsActive());
+        assertEquals(Collections.emptyList(), response.getWords());
+        assertEquals(0, response.getPoints());
+        assertEquals("{\"id\":0,\"name\":\"test\",\"size\":8,\"isActive\":true,\"words\":[],\"points\":0}", response.toString());
     }
 
     @Test public void testWithNonEmptyBoard() {
@@ -34,13 +34,13 @@ public class BoardResponseTest {
         board.addMove(move);
         BoardResponse response = new BoardResponse(board);
 
-        assertEquals(response.getId(), board.getId());
-        assertEquals(response.getName(), board.getName());
-        assertEquals(response.getName(), board.getName());
-        assertEquals(response.getSize(), board.getSize());
-        assertEquals(response.getIsActive(), board.getIsActive());
-        assertEquals(response.getWords(), Collections.singletonList(new WordResponse("ekmek")));
-        assertEquals(response.getPoints(), 6);
-        assertEquals(response.toString(), "{\"id\":0,\"name\":\"test\",\"size\":8,\"isActive\":true,\"words\":[{\"word\":\"ekmek\",\"points\":6}],\"points\":6}");
+        assertEquals(board.getId(), response.getId());
+        assertEquals(board.getName(), response.getName());
+        assertEquals(board.getName(), response.getName());
+        assertEquals(board.getSize(), response.getSize());
+        assertEquals(board.getIsActive(), response.getIsActive());
+        assertEquals(Collections.singletonList(new WordResponse("ekmek")), response.getWords());
+        assertEquals(6, response.getPoints());
+        assertEquals("{\"id\":0,\"name\":\"test\",\"size\":8,\"isActive\":true,\"words\":[{\"word\":\"ekmek\",\"points\":6}],\"points\":6}", response.toString());
     }
 }

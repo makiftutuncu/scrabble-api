@@ -18,11 +18,11 @@ public class MoveResponseTest {
         Move move = new Move(board, word, 0, 0, true);
         MoveResponse response = new MoveResponse(move);
 
-        assertEquals(response.getWord(), word.getWord());
-        assertEquals(response.getRow(), move.getRow());
-        assertEquals(response.getColumn(), move.getColumn());
-        assertEquals(response.getIsHorizontal(), move.getIsHorizontal());
-        assertEquals(response.getPoints(), 6);
-        assertEquals(response.toString(), "{\"word\":\"ekmek\",\"row\":0,\"column\":0,\"isHorizontal\":true,\"points\":6}");
+        assertEquals(word.getWord(), response.getWord());
+        assertEquals(move.getRow(), response.getRow());
+        assertEquals(move.getColumn(), response.getColumn());
+        assertEquals(move.getIsHorizontal(), response.getIsHorizontal());
+        assertEquals(6, response.getPoints());
+        assertEquals("{\"word\":\"ekmek\",\"row\":0,\"column\":0,\"isHorizontal\":true,\"points\":6}", response.toString());
     }
 }

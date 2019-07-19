@@ -9,72 +9,72 @@ import static org.junit.Assert.*;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class LettersTest {
     @Test public void testLowerCaseWord() {
-        assertEquals(Letters.lowerCase(""), "");
-        assertEquals(Letters.lowerCase("123"), "123");
-        assertEquals(Letters.lowerCase("deneme"), "deneme");
-        assertEquals(Letters.lowerCase("DENEME"), "deneme");
-        assertEquals(Letters.lowerCase("IĞÜŞİÖÇ"), "ığüşiöç");
+        assertEquals("", Letters.lowerCase(""));
+        assertEquals("123", Letters.lowerCase("123"));
+        assertEquals("deneme", Letters.lowerCase("deneme"));
+        assertEquals("deneme", Letters.lowerCase("DENEME"));
+        assertEquals("ığüşiöç", Letters.lowerCase("IĞÜŞİÖÇ"));
     }
 
     @Test public void testLowerCaseLetter() {
-        assertEquals(Letters.lowerCase('1'), '1');
-        assertEquals(Letters.lowerCase('@'), '@');
-        assertEquals(Letters.lowerCase('a'), 'a');
-        assertEquals(Letters.lowerCase('A'), 'a');
-        assertEquals(Letters.lowerCase('I'), 'ı');
-        assertEquals(Letters.lowerCase('Ğ'), 'ğ');
-        assertEquals(Letters.lowerCase('Ü'), 'ü');
-        assertEquals(Letters.lowerCase('Ş'), 'ş');
-        assertEquals(Letters.lowerCase('İ'), 'i');
-        assertEquals(Letters.lowerCase('Ö'), 'ö');
-        assertEquals(Letters.lowerCase('Ç'), 'ç');
+        assertEquals('1', Letters.lowerCase('1'));
+        assertEquals('@', Letters.lowerCase('@'));
+        assertEquals('a', Letters.lowerCase('a'));
+        assertEquals('a', Letters.lowerCase('A'));
+        assertEquals('ı', Letters.lowerCase('I'));
+        assertEquals('ğ', Letters.lowerCase('Ğ'));
+        assertEquals('ü', Letters.lowerCase('Ü'));
+        assertEquals('ş', Letters.lowerCase('Ş'));
+        assertEquals('i', Letters.lowerCase('İ'));
+        assertEquals('ö', Letters.lowerCase('Ö'));
+        assertEquals('ç', Letters.lowerCase('Ç'));
     }
 
     @Test public void testPointsOfWord() {
-        assertEquals(Letters.pointsOf(""), 0);
-        assertEquals(Letters.pointsOf("x"), 0);
-        assertEquals(Letters.pointsOf("123"), 0);
-        assertEquals(Letters.pointsOf("@"), 0);
-        assertEquals(Letters.pointsOf("ak"), 2);
-        assertEquals(Letters.pointsOf("deneme"), 9);
-        assertEquals(Letters.pointsOf("çekoslavakya"), 25);
-        assertEquals(Letters.pointsOf("AK"), 2);
-        assertEquals(Letters.pointsOf("DENEME"), 9);
-        assertEquals(Letters.pointsOf("ÇEKOSLAVAKYA"), 25);
+        assertEquals(0,  Letters.pointsOf(""));
+        assertEquals(0,  Letters.pointsOf("x"));
+        assertEquals(0,  Letters.pointsOf("123"));
+        assertEquals(0,  Letters.pointsOf("@"));
+        assertEquals(2,  Letters.pointsOf("ak"));
+        assertEquals(9,  Letters.pointsOf("deneme"));
+        assertEquals(25, Letters.pointsOf("çekoslavakya"));
+        assertEquals(2,  Letters.pointsOf("AK"));
+        assertEquals(9,  Letters.pointsOf("DENEME"));
+        assertEquals(25, Letters.pointsOf("ÇEKOSLAVAKYA"));
     }
 
     @Test public void testPointsOfLetter() {
-        assertEquals(Letters.pointsOf('1'), 0);
-        assertEquals(Letters.pointsOf('x'), 0);
-        assertEquals(Letters.pointsOf('@'), 0);
-        assertEquals(Letters.pointsOf('a'), 1);
-        assertEquals(Letters.pointsOf('b'), 3);
-        assertEquals(Letters.pointsOf('c'), 4);
-        assertEquals(Letters.pointsOf('ç'), 4);
-        assertEquals(Letters.pointsOf('d'), 3);
-        assertEquals(Letters.pointsOf('e'), 1);
-        assertEquals(Letters.pointsOf('f'), 7);
-        assertEquals(Letters.pointsOf('g'), 5);
-        assertEquals(Letters.pointsOf('ğ'), 8);
-        assertEquals(Letters.pointsOf('h'), 5);
-        assertEquals(Letters.pointsOf('ı'), 2);
-        assertEquals(Letters.pointsOf('i'), 1);
-        assertEquals(Letters.pointsOf('j'), 10);
-        assertEquals(Letters.pointsOf('k'), 1);
-        assertEquals(Letters.pointsOf('l'), 1);
-        assertEquals(Letters.pointsOf('m'), 2);
-        assertEquals(Letters.pointsOf('n'), 1);
-        assertEquals(Letters.pointsOf('o'), 2);
-        assertEquals(Letters.pointsOf('ö'), 7);
-        assertEquals(Letters.pointsOf('p'), 5);
-        assertEquals(Letters.pointsOf('r'), 1);
-        assertEquals(Letters.pointsOf('s'), 2);
-        assertEquals(Letters.pointsOf('ş'), 4);
-        assertEquals(Letters.pointsOf('t'), 1);
-        assertEquals(Letters.pointsOf('u'), 2);
-        assertEquals(Letters.pointsOf('ü'), 3);
-        assertEquals(Letters.pointsOf('v'), 7);
-        assertEquals(Letters.pointsOf('y'), 3);
-        assertEquals(Letters.pointsOf('z'), 4);
+        assertEquals(0,  Letters.pointsOf('1'));
+        assertEquals(0,  Letters.pointsOf('x'));
+        assertEquals(0,  Letters.pointsOf('@'));
+        assertEquals(1,  Letters.pointsOf('a'));
+        assertEquals(3,  Letters.pointsOf('b'));
+        assertEquals(4,  Letters.pointsOf('c'));
+        assertEquals(4,  Letters.pointsOf('ç'));
+        assertEquals(3,  Letters.pointsOf('d'));
+        assertEquals(1,  Letters.pointsOf('e'));
+        assertEquals(7,  Letters.pointsOf('f'));
+        assertEquals(5,  Letters.pointsOf('g'));
+        assertEquals(8,  Letters.pointsOf('ğ'));
+        assertEquals(5,  Letters.pointsOf('h'));
+        assertEquals(2,  Letters.pointsOf('ı'));
+        assertEquals(1,  Letters.pointsOf('i'));
+        assertEquals(10, Letters.pointsOf('j'));
+        assertEquals(1,  Letters.pointsOf('k'));
+        assertEquals(1,  Letters.pointsOf('l'));
+        assertEquals(2,  Letters.pointsOf('m'));
+        assertEquals(1,  Letters.pointsOf('n'));
+        assertEquals(2,  Letters.pointsOf('o'));
+        assertEquals(7,  Letters.pointsOf('ö'));
+        assertEquals(5,  Letters.pointsOf('p'));
+        assertEquals(1,  Letters.pointsOf('r'));
+        assertEquals(2,  Letters.pointsOf('s'));
+        assertEquals(4,  Letters.pointsOf('ş'));
+        assertEquals(1,  Letters.pointsOf('t'));
+        assertEquals(2,  Letters.pointsOf('u'));
+        assertEquals(3,  Letters.pointsOf('ü'));
+        assertEquals(7,  Letters.pointsOf('v'));
+        assertEquals(3,  Letters.pointsOf('y'));
+        assertEquals(4,  Letters.pointsOf('z'));
     }
 }

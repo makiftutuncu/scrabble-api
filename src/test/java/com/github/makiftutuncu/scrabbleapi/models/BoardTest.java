@@ -17,22 +17,22 @@ public class BoardTest {
     @Test public void createWithCustomData() {
         Board board = new Board("test-board", 5);
 
-        assertEquals(board.getName(), "test-board");
-        assertEquals(board.getSize(), 5);
+        assertEquals("test-board", board.getName());
+        assertEquals(5, board.getSize());
         assertTrue(board.getIsActive());
-        assertEquals(board.getMoves(), Collections.emptyList());
-        assertEquals(board.toString(), "{\"id\":0,\"name\":\"test-board\",\"size\":5,\"isActive\":true}");
+        assertEquals(Collections.emptyList(), board.getMoves());
+        assertEquals("{\"id\":0,\"name\":\"test-board\",\"size\":5,\"isActive\":true}", board.toString());
     }
 
     @Test public void createWithRequest() {
         CreateBoardRequest request = new CreateBoardRequest("test-board", 5);
         Board board = new Board(request);
 
-        assertEquals(board.getName(), "test-board");
-        assertEquals(board.getSize(), 5);
+        assertEquals("test-board", board.getName());
+        assertEquals(5, board.getSize());
         assertTrue(board.getIsActive());
-        assertEquals(board.getMoves(), Collections.emptyList());
-        assertEquals(board.toString(), "{\"id\":0,\"name\":\"test-board\",\"size\":5,\"isActive\":true}");
+        assertEquals(Collections.emptyList(), board.getMoves());
+        assertEquals("{\"id\":0,\"name\":\"test-board\",\"size\":5,\"isActive\":true}", board.toString());
     }
 
     @Test public void failToPrepareMoveWhenBoardIsDeactivated() {
@@ -45,7 +45,7 @@ public class BoardTest {
         try {
             board.prepareMove(word, request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("deactivated"));
         }
     }
@@ -61,7 +61,7 @@ public class BoardTest {
         try {
             board.prepareMove(word1, request1);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("too long"));
         }
 
@@ -70,7 +70,7 @@ public class BoardTest {
         try {
             board.prepareMove(word2, request2);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("too long"));
         }
 
@@ -79,7 +79,7 @@ public class BoardTest {
         try {
             board.prepareMove(word2, request3);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("too long"));
         }
     }
@@ -94,7 +94,7 @@ public class BoardTest {
         try {
             board.prepareMove(word, request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("row must be in [0, 5) range"));
         }
     }
@@ -109,7 +109,7 @@ public class BoardTest {
         try {
             board.prepareMove(word, request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("column must be in [0, 5) range"));
         }
     }
@@ -127,7 +127,7 @@ public class BoardTest {
         try {
             board.prepareMove(word2, request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("cannot start from empty cell on a non-empty board"));
         }
     }
@@ -149,7 +149,7 @@ public class BoardTest {
         try {
             board.prepareMove(word4, request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("cell [2, 2] already has letter 'l'"));
         }
     }
@@ -167,7 +167,7 @@ public class BoardTest {
         try {
             board.prepareMove(word2, request);
         } catch (ScrabbleException e) {
-            assertEquals(e.getStatus(), HttpStatus.BAD_REQUEST);
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
             assertTrue(e.getMessage().contains("word does not start with letter 'e'"));
         }
     }
@@ -188,24 +188,24 @@ public class BoardTest {
 
         Move move = board.prepareMove(word4, request);
 
-        assertEquals(move.getBoard(), board);
-        assertEquals(move.getWord(), word4);
-        assertEquals(move.getRow(), request.getRow());
-        assertEquals(move.getColumn(), request.getColumn());
-        assertEquals(move.getIsHorizontal(), request.getIsHorizontal());
+        assertEquals(board, move.getBoard());
+        assertEquals(word4, move.getWord());
+        assertEquals(request.getRow(), move.getRow());
+        assertEquals(request.getColumn(), move.getColumn());
+        assertEquals(request.getIsHorizontal(), move.getIsHorizontal());
     }
 
     @Test public void addMove() {
         Board board = new Board("test-board", 6);
 
-        assertEquals(board.getMoves(), Collections.emptyList());
+        assertEquals(Collections.emptyList(), board.getMoves());
 
         Word word = new Word(1, "elma");
         Move move = new Move(board, word, 0, 0, true);
 
         board.addMove(move);
 
-        assertEquals(board.getMoves(), Collections.singletonList(move));
+        assertEquals(Collections.singletonList(move), board.getMoves());
     }
 
     @Test public void deactivate() {

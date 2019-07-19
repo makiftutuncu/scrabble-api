@@ -10,19 +10,19 @@ import static org.junit.Assert.*;
 public class AddMoveRequestTest {
     @Test public void testWithDefaults() {
         AddMoveRequest request = new AddMoveRequest();
-        assertEquals(request.getWord(), "");
-        assertEquals(request.getRow(), -1);
-        assertEquals(request.getColumn(), -1);
+        assertEquals("", request.getWord());
+        assertEquals(-1, request.getRow());
+        assertEquals(-1, request.getColumn());
         assertTrue(request.getIsHorizontal());
-        assertEquals(request.toString(), "{\"word\":\"\",\"row\":-1,\"column\":-1,\"isHorizontal\":true}");
+        assertEquals("{\"word\":\"\",\"row\":-1,\"column\":-1,\"isHorizontal\":true}", request.toString());
     }
 
     @Test public void testWithCustomData() {
         AddMoveRequest request = new AddMoveRequest("deneme", 1, 2, false);
-        assertEquals(request.getWord(), "deneme");
-        assertEquals(request.getRow(), 1);
-        assertEquals(request.getColumn(), 2);
+        assertEquals("deneme", request.getWord());
+        assertEquals(1, request.getRow());
+        assertEquals(2, request.getColumn());
         assertFalse(request.getIsHorizontal());
-        assertEquals(request.toString(), "{\"word\":\"deneme\",\"row\":1,\"column\":2,\"isHorizontal\":false}");
+        assertEquals("{\"word\":\"deneme\",\"row\":1,\"column\":2,\"isHorizontal\":false}", request.toString());
     }
 }

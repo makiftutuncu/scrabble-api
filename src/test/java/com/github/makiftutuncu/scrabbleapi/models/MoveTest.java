@@ -13,11 +13,11 @@ public class MoveTest {
         Word word = new Word(1, "deneme");
         Move move = new Move(board, word, 1, 2, true);
 
-        assertEquals(move.getBoard(), board);
-        assertEquals(move.getWord(), word);
-        assertEquals(move.getRow(), 1);
-        assertEquals(move.getColumn(), 2);
+        assertEquals(board, move.getBoard());
+        assertEquals(word, move.getWord());
+        assertEquals(1, move.getRow());
+        assertEquals(2, move.getColumn());
         assertTrue(move.getIsHorizontal());
-        assertEquals(move.toString(), "{\"id\":0,\"board\":\"test-board\",\"word\":\"deneme\",\"row\":1,\"column\":2,\"isHorizontal\":true}");
+        assertEquals("{\"id\":0,\"board\":\"test-board\",\"word\":\"deneme\",\"row\":1,\"column\":2,\"isHorizontal\":true}", move.toString());
     }
 }

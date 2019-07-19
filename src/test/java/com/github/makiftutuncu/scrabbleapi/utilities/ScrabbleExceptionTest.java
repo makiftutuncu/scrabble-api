@@ -12,14 +12,14 @@ public class ScrabbleExceptionTest {
     @Test public void testWithDefaults() {
         ScrabbleException exception = new ScrabbleException("test");
 
-        assertEquals(exception.getMessage(), "test");
-        assertEquals(exception.getStatus(), HttpStatus.INTERNAL_SERVER_ERROR);
+        assertEquals("test", exception.getMessage());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatus());
     }
 
     @Test public void testWithCustomData() {
         ScrabbleException exception = new ScrabbleException(HttpStatus.I_AM_A_TEAPOT, "test");
 
-        assertEquals(exception.getMessage(), "test");
-        assertEquals(exception.getStatus(), HttpStatus.I_AM_A_TEAPOT);
+        assertEquals("test", exception.getMessage());
+        assertEquals(HttpStatus.I_AM_A_TEAPOT, exception.getStatus());
     }
 }

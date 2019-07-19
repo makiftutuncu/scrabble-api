@@ -24,8 +24,8 @@ public class BoardControllerTest extends SpringTest {
     @Test public void getActiveBoardsWithNoBoards() throws Exception {
         MockHttpServletResponse response = getRequest("/boards");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), "[]");
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals("[]", response.getContentAsString());
     }
 
     @Test public void getActiveBoardsWithSomeBoards() throws Exception {
@@ -38,8 +38,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), String.format("[%s]", new BoardResponse(board1)));
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(String.format("[%s]", new BoardResponse(board1)), response.getContentAsString());
     }
 
     @Test public void failToCreateBoardBecauseItExists() throws Exception {
@@ -49,7 +49,7 @@ public class BoardControllerTest extends SpringTest {
         CreateBoardRequest request = new CreateBoardRequest("test-board", 3);
         MockHttpServletResponse response = postRequest("/boards", request.toString());
 
-        assertEquals(response.getStatus(), HttpStatus.BAD_REQUEST.value());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("already exists"));
     }
 
@@ -57,14 +57,14 @@ public class BoardControllerTest extends SpringTest {
         CreateBoardRequest request = new CreateBoardRequest("test-board", 3);
         MockHttpServletResponse response = postRequest("/boards", request.toString());
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("\"name\":\"test-board\",\"size\":3,\"isActive\":true,\"words\":[],\"points\":0"));
     }
 
     @Test public void failToGetBoardBecauseItDoesNotExist() throws Exception {
         MockHttpServletResponse response = getRequest("/boards/-1");
 
-        assertEquals(response.getStatus(), HttpStatus.NOT_FOUND.value());
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("not found"));
     }
 
@@ -74,14 +74,14 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards/" + board.getId());
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), (new BoardResponse(board)).toString());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(new BoardResponse(board).toString(), response.getContentAsString());
     }
 
     @Test public void failToDeactivateBecauseBoardDoesNotExist() throws Exception {
         MockHttpServletResponse response = postRequest("/boards/-1/deactivate");
 
-        assertEquals(response.getStatus(), HttpStatus.NOT_FOUND.value());
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("not found"));
     }
 
@@ -92,8 +92,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/" + board.getId() + "/deactivate");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), (new BoardResponse(board)).toString());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(new BoardResponse(board).toString(), response.getContentAsString());
     }
 
     @Test public void getMovesWithNoMoves() throws Exception {
@@ -102,8 +102,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards/" + board.getId() + "/moves");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), "[]");
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals("[]", response.getContentAsString());
     }
 
     @Test public void getMovesWithSomeMoves() throws Exception {
@@ -115,8 +115,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards/" + board.getId() + "/moves");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), String.format("[%s]", new MoveResponse(move)));
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(String.format("[%s]", new MoveResponse(move)), response.getContentAsString());
     }
 
     @Test public void failToGetMovesWithStepWithInvalidStep() throws Exception {
@@ -125,7 +125,7 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards/" + board.getId() + "/moves/-1");
 
-        assertEquals(response.getStatus(), HttpStatus.BAD_REQUEST.value());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("Step -1 is invalid, it should be greater than 1!"));
     }
 
@@ -135,8 +135,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards/" + board.getId() + "/moves/2");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), "[]");
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals("[]", response.getContentAsString());
     }
 
     @Test public void getMovesWithStepWithSomeMoves() throws Exception {
@@ -148,8 +148,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards/" + board.getId() + "/moves/2");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), String.format("[%s]", new MoveResponse(move)));
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(String.format("[%s]", new MoveResponse(move)), response.getContentAsString());
     }
 
     @Test public void failToAddMoveBecauseBoardDoesNotExist() throws Exception {
@@ -157,7 +157,7 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/-1/moves", request.toString());
 
-        assertEquals(response.getStatus(), HttpStatus.NOT_FOUND.value());
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("Board"));
         assertTrue(response.getContentAsString().contains("not found"));
     }
@@ -170,7 +170,7 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/" + board.getId() + "/moves", request.toString());
 
-        assertEquals(response.getStatus(), HttpStatus.NOT_FOUND.value());
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("Word"));
         assertTrue(response.getContentAsString().contains("not found"));
     }
@@ -183,7 +183,7 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/" + board.getId() + "/moves", request.toString());
 
-        assertEquals(response.getStatus(), HttpStatus.BAD_REQUEST.value());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("too long"));
     }
 
@@ -197,8 +197,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/" + board.getId() + "/moves", request.toString());
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), new MoveResponse(move).toString());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(new MoveResponse(move).toString(), response.getContentAsString());
     }
 
     @Test public void failToAddMovesBecauseBoardDoesNotExist() throws Exception {
@@ -206,7 +206,7 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/-1/multipleMoves", String.format("[%s]", request));
 
-        assertEquals(response.getStatus(), HttpStatus.NOT_FOUND.value());
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("Board"));
         assertTrue(response.getContentAsString().contains("not found"));
     }
@@ -220,7 +220,7 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/" + board.getId() + "/multipleMoves", String.format("[%s,%s]", request1, request2));
 
-        assertEquals(response.getStatus(), HttpStatus.BAD_REQUEST.value());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("words were not valid"));
     }
 
@@ -233,7 +233,7 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/" + board.getId() + "/multipleMoves", String.format("[%s,%s]", request1, request2));
 
-        assertEquals(response.getStatus(), HttpStatus.BAD_REQUEST.value());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("word does not start with letter 'd'"));
     }
 
@@ -251,14 +251,14 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = postRequest("/boards/" + board.getId() + "/multipleMoves", String.format("[%s,%s]", request1, request2));
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), String.format("[%s,%s]", new MoveResponse(move1), new MoveResponse(move2)));
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(String.format("[%s,%s]", new MoveResponse(move1), new MoveResponse(move2)), response.getContentAsString());
     }
 
     @Test public void failToGetWordsBecauseBoardDoesNotExist() throws Exception {
         MockHttpServletResponse response = getRequest("/boards/-1/words");
 
-        assertEquals(response.getStatus(), HttpStatus.NOT_FOUND.value());
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
         assertTrue(response.getContentAsString().contains("Board"));
         assertTrue(response.getContentAsString().contains("not found"));
     }
@@ -269,8 +269,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards/" + board.getId() + "/words");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), "[]");
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals("[]", response.getContentAsString());
     }
 
     @Test public void getWordsWithSomeWords() throws Exception {
@@ -282,8 +282,8 @@ public class BoardControllerTest extends SpringTest {
 
         MockHttpServletResponse response = getRequest("/boards/" + board.getId() + "/words");
 
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getContentAsString(), String.format("[%s]", new WordResponse(word.getWord())));
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(String.format("[%s]", new WordResponse(word.getWord())), response.getContentAsString());
     }
 
     private MockHttpServletResponse getRequest(String url) throws Exception {

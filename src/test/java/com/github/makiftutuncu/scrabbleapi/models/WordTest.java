@@ -11,8 +11,8 @@ public class WordTest {
     @Test public void test() {
         Word word = new Word(1, "deneme");
 
-        assertEquals(word.getId(), 1);
-        assertEquals(word.getWord(), "deneme");
-        assertEquals(word.toString(), "{\"id\":1,\"word\":\"deneme\"}");
+        assertEquals(1, word.getId());
+        assertEquals("deneme", word.getWord());
+        assertEquals("{\"id\":1,\"word\":\"deneme\"}", word.toString());
     }
 }
